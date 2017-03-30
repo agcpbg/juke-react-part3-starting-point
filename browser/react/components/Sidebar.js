@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import NewPlaylist from './NewPlaylist';
 
 const Sidebar = (props) => {
 
@@ -16,6 +17,15 @@ const Sidebar = (props) => {
           <Link to='/artists'>ARTISTS</Link>
         </h4>
       </section>
+      <hr />
+        <section>
+          <h4 className="text-muted">PLAYLISTS</h4>
+          <h4>
+            <Link className="btn btn-primary btn-block" to={'/newplaylist'}>
+              <span className="glyphicon glyphicon-plus"></span> PLAYLIST
+            </Link>
+          </h4>
+        </section>
     </sidebar>
   );
 }
