@@ -8,16 +8,16 @@ export default class FilterableArtistsContainer extends React.Component {
     super();
     this.state = {
       inputValue: '',
-      filteredArtists: [],
     };
 
+    this.filterFunction = this.filterFunction.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount () {
-    this.setState({
-      filteredArtists: props.artists
-    })
+  filterFunction(){
+      return this.props.artists.filter((artist)=>{
+            return artist.name.match(this.state.inputValue)
+      })
   }
 
   handleChange (event) {
@@ -26,11 +26,11 @@ export default class FilterableArtistsContainer extends React.Component {
   }
 
   render () {
-    return (
 
+    return (
       <div>
         <FilterInput handleChange={this.handleChange} />
-        <Artists artists={filteredArtists} />
+        <Artists artists={this.filterFunction()} />  {/* this will run on every render, component will render on every stateupdate */}
       </div>
 
     )
