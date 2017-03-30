@@ -18,6 +18,8 @@ export default class AppContainer extends Component {
 
     this.selectAlbum = this.selectAlbum.bind(this);
     this.selectArtist = this.selectArtist.bind(this);
+    this.addPlaylist = this.addPlaylist.bind(this);
+    this.selectPlaylist = this.selectPlaylist.bind(this);
   }
 
   componentDidMount () {
@@ -25,16 +27,41 @@ export default class AppContainer extends Component {
     Promise
       .all([
         axios.get('/api/albums/'),
-        axios.get('/api/artists/')
+        axios.get('/api/artists/'),
+        axios.get('/api/playlists')
       ])
       .then(res => res.map(r => r.data))
       .then(data => this.onLoad(...data));
   }
 
-  onLoad (albums, artists) {
+  onLoad (albums, artists, playlists) {
     this.setState({
       albums: convertAlbums(albums),
-      artists: artists
+      artists: artists,
+      playlists: playlists
+    });
+  }
+
+  addPlaylist(playlistName) {
+    axios.post('/api/playlists', { name: playlistName })
+    .then(res => res.data)
+    .then(playlist => {
+      this.setState({
+        playlists: [...this.state.playlists, playlist]
+      });
+    });
+  }
+
+  selectPlaylist(playlistId) {
+    axios.get('/api/playlists/' + playlistId)
+    .then(res => res.data)
+    .then(playlist => {
+        playlist.songs = playlist.songs.map(song => {
+          convertSong(song);
+      })
+      this.setState({
+        selectedPlaylist: playlist
+      });
     });
   }
 
@@ -72,12 +99,14 @@ export default class AppContainer extends Component {
       selectAlbum: this.selectAlbum,
       selectArtist: this.selectArtist,
       artists: this.state.artists,
+      addPlaylist: this.addPlaylist,
+      selectPlaylist: this.selectPlaylist,
     });
 
     return (
       <div id="main" className="container-fluid">
         <div className="col-xs-2">
-          <Sidebar />
+          <Sidebar playlists={this.state.playlists} />
         </div>
         <div className="col-xs-10">
         {
