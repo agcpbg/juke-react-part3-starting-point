@@ -70,7 +70,8 @@ export default class AppContainer extends Component {
 
     const props = Object.assign({}, this.state, {
       selectAlbum: this.selectAlbum,
-      selectArtist: this.selectArtist
+      selectArtist: this.selectArtist,
+      artists: this.state.artists,
     });
 
     return (
